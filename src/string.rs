@@ -434,6 +434,26 @@ impl From<&EcoString> for String {
     }
 }
 
+#[cfg(feature = "serde")]
+impl<'de> serde::Deserialize<'de> for EcoString {
+    fn deserialize<D>(de: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        <&'de str as serde::Deserialize<'de>>::deserialize(de).map(EcoString::from)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl serde::Serialize for EcoString {
+    fn serialize<S>(&self, se: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        se.serialize_str(self)
+    }
+}
+
 #[cold]
 const fn exceeded_inline_capacity() -> ! {
     panic!("exceeded inline capacity");
