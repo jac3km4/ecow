@@ -440,7 +440,7 @@ impl<'de> serde::Deserialize<'de> for EcoString {
     where
         D: serde::Deserializer<'de>,
     {
-        <&'de str as serde::Deserialize<'de>>::deserialize(de).map(EcoString::from)
+        <Cow<'de, str> as serde::Deserialize<'de>>::deserialize(de).map(EcoString::from)
     }
 }
 
